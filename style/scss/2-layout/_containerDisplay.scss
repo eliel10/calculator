@@ -1,0 +1,32 @@
+@use "../1-base/font.scss";
+@use "../1-base/colors";
+
+#container-display{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    height: 10rem;
+    padding: .5rem;
+    gap: 0.3rem;
+    font-family: "Nanum", "sans-serif";
+
+
+    .display{
+        font-size: 3rem;
+        text-align: right;
+        color: colors.$textPrimary;
+        font-weight: 500;
+    }
+
+    .history{
+        text-align: right;
+        font-size: 1rem;
+        color: colors.$textSecundary;
+        font-weight: 400;
+    }
+
+    .date-time{
+        color: colors.$textPrimary;
+        font-size: .8rem;
+    }
+}

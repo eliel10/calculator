@@ -1,0 +1,52 @@
+@use "../1-base/font";
+@use "../1-base/colors";
+
+.btn{
+    padding: 1.5rem 0;
+    background-color: colors.$numericBlac;
+    color: colors.$textPrimary;
+    font-family: "Nanum", "sans-serif";
+    font-size: 1.2rem;
+    font-weight: 100;
+    transition: .2s background-color ease-in-out;
+
+    &:not(.aside,[data-value="equal"]):hover{
+        background-color: lighten(colors.$numericBlac, 50%);
+    }
+
+    &:not(.aside,[data-value="equal"]):active{
+        transition: .1s ease-in-out;
+        background-color: lighten(colors.$numericBlac, 80%);
+    }
+}
+
+.btn[data-value="0"]{
+    grid-column: span 2;
+}
+
+.btn[data-value="equal"]{
+    background-color: colors.$equalGreen;
+
+    &:hover{
+        background-color: lighten(colors.$equalGreen, 20%);
+    }
+
+    &:active{
+        transition: .1s ease-in-out;
+        background-color: lighten(colors.$equalGreen, 50%);
+    }
+}
+
+.aside{
+    background-color: colors.$operationGrey;
+
+    &:hover{
+        background-color:lighten(colors.$operationGrey, 50%);
+    }
+
+    &:active{
+        transition: .1s ease-in-out;
+        background-color:lighten(colors.$operationGrey, 80%);
+    }
+}
+
