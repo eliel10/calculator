@@ -4,7 +4,7 @@ class Calculator{
     //metodo construtor da classe Calculator
     constructor(){
         this.locale = "pt-BR";
-        this._btnsCalculator = document.querySelectorAll(".btn");
+        this._btnsCalculator = document.querySelectorAll("[data-value]");
         this._displayEl = document.querySelector(".display");
         this._displayTimeEl = document.querySelector(".time");
         this._displayDateEl = document.querySelector(".date");
@@ -19,6 +19,25 @@ class Calculator{
         
         setInterval(()=>{
             this.setDateTime();
+        })
+        this.eventsButtons();
+    }
+
+
+    //adiciona mais de um evento aos botões
+    addEventListenerAll(element,events,fn){
+        events.split(" ").forEach(event=>{
+            element.addEventListener(event,fn);
+        })
+    }
+
+
+    //adiciona evento aos botões
+    eventsButtons(){
+        this._btnsCalculator.forEach(btn=>{
+            this.addEventListenerAll(btn,"click drag",()=>{
+                console.log(btn.dataset.value);
+            })
         })
     }
 
