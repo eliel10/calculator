@@ -48,6 +48,8 @@ button {
 #container-display .date-time {
   color: rgb(245, 245, 245);
   font-size: 0.8rem;
+  display: flex;
+  gap: 20px;
 }
 
 #container-buttons .content-buttons {

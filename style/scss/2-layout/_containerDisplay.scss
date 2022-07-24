@@ -28,5 +28,7 @@
     .date-time{
         color: colors.$textPrimary;
         font-size: .8rem;
+        display: flex;
+        gap: 20px;
     }
 }
