@@ -70,10 +70,25 @@ class Calculator{
     }
 
 
-    //
+    //transforma toda a operacao em string e usa o metodo eval para fazer o calculo
     calc(){
         let operation = this._operation.join("");
+        let result = eval(operation); 
+        this._operation = [result];
         console.log(eval(operation));
+        console.log(this._operation);
+        return result;
+    }
+
+
+    //verifica se tem um segundo operador na operacao, se tiver faz o calculo da primeira expressão
+    setCalc(){
+        if(this._operation.length>3){
+            let lastOperation = this._operation.pop();
+            this._operation = [this.calc()];
+            this._operation.push(lastOperation);
+            console.log(lastOperation);
+        }
     }
 
     //faz a operação da calculadora
@@ -98,6 +113,8 @@ class Calculator{
                 this.setLastPositionOperation(parseInt(concatNumber));
             }
         }
+
+        this.setCalc();
         console.log(this._operation);
     }
 
@@ -200,5 +217,13 @@ class Calculator{
 
     set newDate(value){
         this._newDate = value;
+    }
+
+    get operation(){
+        return this._operation;
+    }
+
+    set operation(value){
+        this._operation = value;
     }
 }
