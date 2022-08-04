@@ -23,6 +23,8 @@ class Calculator{
             this.setDateTime();
         })
         this.eventsButtons();
+
+        this.setDisplay();
     }
 
 
@@ -50,6 +52,7 @@ class Calculator{
 
     clear(){
         this._operation = [];
+        this.setDisplay();
     }
 
 
@@ -70,14 +73,21 @@ class Calculator{
     }
 
 
-    //transforma toda a operacao em string e usa o metodo eval para fazer o calculo
+    //transforma toda a operacao em string e usa o metodo eval para fazer e retornar o calculo
     calc(){
         let operation = this._operation.join("");
         let result = eval(operation);
-        this.setResultOperation(result);
         console.log(eval(operation));
-        console.log(this._operation);
         return result;
+    }
+
+
+    //altera o valor da operacao com o resultado do calculo e exibe no display
+    equalClicked(){
+        let result = this.calc();
+        this.setResultOperation(result);
+        this.setDisplay();
+        console.log(this._operation);
     }
 
 
@@ -95,6 +105,7 @@ class Calculator{
             this._operation.push(lastOperation);
             console.log(lastOperation);
         }
+        this.setDisplay();
     }
 
 
@@ -106,6 +117,25 @@ class Calculator{
         this._equalClicked = false;
     }
 
+
+    //exibe a operacao no display
+    setDisplay(){
+        
+        let lastNumberOperation;
+        
+        for(let x=this._operation.length-1; x>=0; x--){
+            if(!isNaN(this._operation[x])){
+                lastNumberOperation = this._operation[x];
+                break;
+            }
+        }
+
+        if(this._operation.length == 0){
+            lastNumberOperation = 0;
+        }
+
+        this.display = lastNumberOperation;
+    }
 
     //faz a operação da calculadora
     addOperation(valueButton){
@@ -132,6 +162,7 @@ class Calculator{
         }
 
         this.setCalc();
+        this.setDisplay();
         console.log(this._operation);
     }
 
@@ -176,7 +207,7 @@ class Calculator{
 
             case "equal":
                 this._equalClicked = true;
-                this.calc();
+                this.equalClicked();
                 break;
             
             case "clear_entry":
