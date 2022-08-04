@@ -10,6 +10,7 @@ class Calculator{
         this._displayDateEl = document.querySelector(".date");
         this._newDate;
         this._operation = [];
+        this._equalClicked = false;
         this.initialize();
     }
 
@@ -37,7 +38,6 @@ class Calculator{
     eventsButtons(){
         this._btnsCalculator.forEach(btn=>{
             this.addEventListenerAll(btn,"click drag",()=>{
-                //valor do botão
                 let valueButton = btn.dataset.value;
                 this.execButton(valueButton);
             })
@@ -49,7 +49,7 @@ class Calculator{
     }
 
     clear(){
-
+        this._operation = [];
     }
 
 
@@ -73,11 +73,17 @@ class Calculator{
     //transforma toda a operacao em string e usa o metodo eval para fazer o calculo
     calc(){
         let operation = this._operation.join("");
-        let result = eval(operation); 
-        this._operation = [result];
+        let result = eval(operation);
+        this.setResultOperation(result);
         console.log(eval(operation));
         console.log(this._operation);
         return result;
+    }
+
+
+    //insere o valor do calculo na array da operação
+    setResultOperation(result){
+        this._operation = [result];
     }
 
 
@@ -85,14 +91,25 @@ class Calculator{
     setCalc(){
         if(this._operation.length>3){
             let lastOperation = this._operation.pop();
-            this._operation = [this.calc()];
+            this.setResultOperation(this.calc());
             this._operation.push(lastOperation);
             console.log(lastOperation);
         }
     }
 
+
+    //verifica se o igual foi clicado e o proximo botão foi um numero, se sim zera a operação
+    equalIsClicked(valueButton){
+        if(this._equalClicked && !isNaN(valueButton)){
+            this.clear();
+        }
+        this._equalClicked = false;
+    }
+
+
     //faz a operação da calculadora
     addOperation(valueButton){
+        this.equalIsClicked(valueButton);
         if(isNaN(this.getLastPositionOperation())){
             if(!isNaN(valueButton)){
                 this._operation.push(valueButton);
@@ -121,7 +138,6 @@ class Calculator{
 
     //recebe o botão clicado e executa a funcao correspondente a ele
     execButton(valueButton){
-        
 
         switch(valueButton){
 
@@ -159,6 +175,7 @@ class Calculator{
                 break;
 
             case "equal":
+                this._equalClicked = true;
                 this.calc();
                 break;
             
