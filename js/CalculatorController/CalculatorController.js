@@ -6,10 +6,12 @@ class Calculator{
         this.locale = "pt-BR";
         this._btnsCalculator = document.querySelectorAll("[data-value]");
         this._displayEl = document.querySelector(".display");
+        this._historyEl = document.querySelector(".history");
         this._displayTimeEl = document.querySelector(".time");
         this._displayDateEl = document.querySelector(".date");
         this._newDate;
         this._operation = [];
+        this._history = [];
         this._equalClicked = false;
         this.initialize();
     }
@@ -52,6 +54,8 @@ class Calculator{
 
     clear(){
         this._operation = [];
+        this._history = [];
+        this.setHistory();
         this.setDisplay();
     }
 
@@ -72,6 +76,11 @@ class Calculator{
         this._operation[this._operation.length-1]=value;
     }
 
+    //altera ou adiciona um valor a ultima posição do histórico da calculadora
+    setLastPositionHistory(value){
+        this._history[this._history.length-1]=value;
+    }
+
 
     //transforma toda a operacao em string e usa o metodo eval para fazer e retornar o calculo
     calc(){
@@ -87,6 +96,8 @@ class Calculator{
         let result = this.calc();
         this.setResultOperation(result);
         this.setDisplay();
+        this.setHistory();
+        this._history = [result];
         console.log(this._operation);
     }
 
@@ -109,7 +120,7 @@ class Calculator{
     }
 
 
-    //verifica se o igual foi clicado e o proximo botão foi um numero, se sim zera a operação
+    //verifica se o igual foi clicado e o proximo botão clicado foi um numero, se sim, zera a operação
     equalIsClicked(valueButton){
         if(this._equalClicked && !isNaN(valueButton)){
             this.clear();
@@ -137,15 +148,37 @@ class Calculator{
         this.display = lastNumberOperation;
     }
 
-    //faz a operação da calculadora
+
+    //exibe o historico da operação no display
+    setHistory(){
+        let historyValue = this._history.length == 0 ? "" : this._history.join(" ");
+        this.history = historyValue;
+    }
+
+
+
+    //concatena os numeros digitados na calculadora
+    concatNumberOperation(valueButton){
+        let concatNumber = this.getLastPositionOperation().toString() + valueButton.toString();
+
+        this.setLastPositionOperation(parseInt(concatNumber));
+
+        this.setLastPositionHistory(parseInt(concatNumber));
+    }
+
+
+    //adiciona os valores e operadores na operação da calculadora
     addOperation(valueButton){
         this.equalIsClicked(valueButton);
         if(isNaN(this.getLastPositionOperation())){
             if(!isNaN(valueButton)){
                 this._operation.push(valueButton);
+                this._history.push(valueButton);
             }
             else if(this.isOperator(valueButton)){
                 this.setLastPositionOperation(valueButton);
+                this.setLastPositionHistory(valueButton);
+                this.setHistory();
             }
             else{
 
@@ -154,16 +187,18 @@ class Calculator{
         else{
             if(this.isOperator(valueButton)){
                 this._operation.push(valueButton);
+                this._history.push(valueButton);
+                this.setHistory();
             }
             else{
-                let concatNumber = this.getLastPositionOperation().toString() + valueButton.toString();
-                this.setLastPositionOperation(parseInt(concatNumber));
+                this.concatNumberOperation(valueButton);
             }
         }
 
         this.setCalc();
         this.setDisplay();
         console.log(this._operation);
+        console.log("his",this._history);
     }
 
 
@@ -241,6 +276,14 @@ class Calculator{
 
     set display(value){
         this._displayEl.innerHTML = value;
+    }
+
+    get history(){
+        return this._historyEl.innerHTML;
+    }
+
+    set history(value){
+        this._historyEl.innerHTML = value;
     }
 
     get time(){
