@@ -1,1 +1,2 @@
-let calculator = new Calculator();
+let calculator = new Calculator;
+let theme = new Theme;

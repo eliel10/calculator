@@ -1,9 +1,30 @@
 @use "../1-base/font";
 @use "../1-base/colors";
+@use "../4-theme/darkLight";
+
 
 #container{
     width: 350px;
     border:1px solid colors.$borderGrey;
     margin: 10vh auto;
-    background-image: colors.$gradientGrey;
+    transition: .5s background-color ease-in-out
 }
+
+
+#container.light{
+    @include darkLight.light;
+
+    .display,.date-time-theme{
+        color: colors.$numericBlac;
+    }
+
+    .history{
+        color: colors.$operationGrey;
+    }
+}
+
+
+#container.darkTheme{
+    @include darkLight.dark;
+}
+

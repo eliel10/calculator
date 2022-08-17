@@ -5,7 +5,7 @@
 }
 
 body {
-  background-color: black;
+  background-color: rgba(3, 3, 3, 0.8);
 }
 
 button {
@@ -17,11 +17,41 @@ button {
   font-family: "Nanum";
   src: url("../fonts/Nanum/Nanum.ttf");
 }
+.theme {
+  text-align: center;
+}
+.theme .icon-theme {
+  font-size: 1.2rem;
+  margin: 0;
+  padding: 0;
+  color: azure;
+  cursor: pointer;
+}
+@media (min-width: 1024px) {
+  .theme .icon-theme:hover {
+    color: rgb(37, 145, 109);
+  }
+}
+
 #container {
   width: 350px;
   border: 1px solid #aaa;
   margin: 10vh auto;
-  background-image: linear-gradient(to bottom, rgb(43, 43, 43), rgb(241, 241, 241));
+  transition: 0.5s background-color ease-in-out;
+}
+
+#container.light {
+  background-color: rgb(255, 255, 255);
+}
+#container.light .display, #container.light .date-time-theme {
+  color: rgba(3, 3, 3, 0.8);
+}
+#container.light .history {
+  color: rgba(39, 39, 39, 0.4);
+}
+
+#container.darkTheme {
+  background-color: rgba(3, 3, 3, 0.8);
 }
 
 #container-display {
@@ -42,13 +72,16 @@ button {
 #container-display .history {
   text-align: right;
   font-size: 1rem;
+  min-height: 1.5rem;
   color: rgb(212, 212, 212);
   font-weight: 400;
 }
-#container-display .date-time {
+#container-display .date-time-theme {
   color: rgb(245, 245, 245);
   font-size: 0.8rem;
   display: flex;
+  justify-content: space-between;
+  align-items: center;
   gap: 20px;
 }
 
@@ -68,8 +101,10 @@ button {
   font-weight: 100;
   transition: 0.2s background-color ease-in-out;
 }
-.btn:not(.aside, [data-value=equal]):hover {
-  background-color: rgba(131, 131, 131, 0.8);
+@media (min-width: 1024px) {
+  .btn:not(.aside, [data-value=equal]):hover {
+    background-color: rgba(131, 131, 131, 0.8);
+  }
 }
 .btn:not(.aside, [data-value=equal]):active {
   transition: 0.1s ease-in-out;
@@ -83,8 +118,10 @@ button {
 .btn[data-value=equal] {
   background-color: rgb(37, 145, 109);
 }
-.btn[data-value=equal]:hover {
-  background-color: #4bd1a4;
+@media (min-width: 1024px) {
+  .btn[data-value=equal]:hover {
+    background-color: #4bd1a4;
+  }
 }
 .btn[data-value=equal]:active {
   transition: 0.1s ease-in-out;
@@ -94,8 +131,10 @@ button {
 .aside {
   background-color: rgba(39, 39, 39, 0.4);
 }
-.aside:hover {
-  background-color: rgba(167, 167, 167, 0.4);
+@media (min-width: 1024px) {
+  .aside:hover {
+    background-color: rgba(167, 167, 167, 0.4);
+  }
 }
 .aside:active {
   transition: 0.1s ease-in-out;

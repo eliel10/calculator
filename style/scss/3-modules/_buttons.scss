@@ -1,5 +1,6 @@
 @use "../1-base/font";
 @use "../1-base/colors";
+@use "../1-base/mixinMedia" as media;
 
 .btn{
     padding: 1.5rem 0;
@@ -10,8 +11,10 @@
     font-weight: 100;
     transition: .2s background-color ease-in-out;
 
-    &:not(.aside,[data-value="equal"]):hover{
-        background-color: lighten(colors.$numericBlac, 50%);
+    @include media.desktop{
+        &:not(.aside,[data-value="equal"]):hover{
+            background-color: lighten(colors.$numericBlac, 50%);
+        }
     }
 
     &:not(.aside,[data-value="equal"]):active{
@@ -27,8 +30,10 @@
 .btn[data-value="equal"]{
     background-color: colors.$equalGreen;
 
-    &:hover{
-        background-color: lighten(colors.$equalGreen, 20%);
+    @include media.desktop{
+        &:hover{
+            background-color: lighten(colors.$equalGreen, 20%);
+        }
     }
 
     &:active{
@@ -40,8 +45,10 @@
 .aside{
     background-color: colors.$operationGrey;
 
-    &:hover{
-        background-color:lighten(colors.$operationGrey, 50%);
+    @include media.desktop{
+        &:hover{
+            background-color:lighten(colors.$operationGrey, 50%);
+        }
     }
 
     &:active{

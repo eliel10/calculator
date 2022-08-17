@@ -5,20 +5,28 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style/css/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css" integrity="sha512-1sCRPdkRXhBV2PBLUdRb4tMg1w2YPf37qatUFeS7zlBy7jJI8Lf4VHwWfZZfpXtYSLy85pkm9GaYVYMfw5BC1A==" crossorigin="anonymous" referrerpolicy="no-referrer">
     <script src="js/CalculatorController/CalculatorController.js"></script>
+    <script src="js/theme/theme.js"></script>
     <script src="js/calculator.js" defer></script>
     <title>Calculator</title>
 </head>
 <body>
-     <div id="container">
+     <div id="container" class="light">
 
         <div id="container-display">
-            <div class="date-time">
+            <div class="date-time-theme">
                 <span class="time"></span>
                 <span class="date"></span>
+
+                <div class="theme">
+                    <i id="icon-theme" class="fa-solid fa-sun icon-theme"></i>
+                    <!-- <i class="fa-solid fa-moon icon-theme"></i> -->
+                </div>
+
             </div>
             <div class="history"></div>
-            <div class="display">0123456</div>
+            <div class="display"></div>
         </div>
 
         <div id="container-buttons">
