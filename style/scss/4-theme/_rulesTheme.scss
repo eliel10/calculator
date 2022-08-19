@@ -1,0 +1,38 @@
+@use "../1-base/colors";
+@use "../1-base/mixinMedia" as media;
+@use "../4-theme/darkLight";
+
+.theme{
+    text-align: center;
+
+    .icon-theme{
+        font-size: 1.2rem;
+        margin: 0;
+        padding: 0;
+        cursor: pointer;
+
+        @include media.desktop{
+            &:hover{
+                color:colors.$equalGreen;
+            }
+        }
+    }
+}
+
+
+#container.light{
+    @include darkLight.light;
+
+    .display,.date-time-theme{
+        color: colors.$numericBlac;
+    }
+
+    .history{
+        color: colors.$operationGrey;
+    }
+}
+
+
+#container.darkTheme{
+    @include darkLight.dark;
+}

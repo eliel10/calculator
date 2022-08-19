@@ -1,30 +1,15 @@
 @use "../1-base/font";
 @use "../1-base/colors";
-@use "../4-theme/darkLight";
+@use "../1-base/mixinMedia" as media;
 
 
 #container{
     width: 350px;
     border:1px solid colors.$borderGrey;
     margin: 10vh auto;
-    transition: .5s background-color ease-in-out
-}
+    transition: .5s background-color ease-in-out;
 
-
-#container.light{
-    @include darkLight.light;
-
-    .display,.date-time-theme{
-        color: colors.$numericBlac;
-    }
-
-    .history{
-        color: colors.$operationGrey;
+    @include media.mobile{
+        width: 80vw;
     }
 }
-
-
-#container.darkTheme{
-    @include darkLight.dark;
-}
-
