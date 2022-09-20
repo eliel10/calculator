@@ -19,13 +19,13 @@ button {
 }
 #container {
   width: 350px;
-  border: 1px solid #aaa;
+  box-shadow: 0px 0px 10px #aaa;
   margin: 10vh auto;
   transition: 0.5s background-color ease-in-out;
 }
 @media (max-width: 480px) {
   #container {
-    width: 80vw;
+    width: 90vw;
   }
 }
 
@@ -43,6 +43,8 @@ button {
   text-align: right;
   color: rgb(245, 245, 245);
   font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 #container-display .history {
   text-align: right;
@@ -74,7 +76,7 @@ button {
   font-family: "Nanum", "sans-serif";
   font-size: 1.2rem;
   font-weight: 100;
-  transition: 0.2s background-color ease-in-out;
+  transition: 0.1s background-color ease-in-out;
 }
 @media (min-width: 1024px) {
   .btn:not(.aside, [data-value=equal]):hover {
@@ -99,7 +101,6 @@ button {
   }
 }
 .btn[data-value=equal]:active {
-  transition: 0.1s ease-in-out;
   background-color: #c5f0e2;
 }
 
@@ -112,7 +113,6 @@ button {
   }
 }
 .aside:active {
-  transition: 0.1s ease-in-out;
   background-color: rgba(243, 243, 243, 0.4);
 }
 

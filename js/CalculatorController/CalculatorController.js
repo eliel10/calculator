@@ -13,6 +13,8 @@ class Calculator{
         this._operation = [];
         this._history = [];
         this._equalClicked = false;
+        this._lastNumber = "";
+        this._lastOperator = "";
         this.initialize();
     }
 
@@ -24,6 +26,7 @@ class Calculator{
         setInterval(()=>{
             this.setDateTime();
         })
+
         this.eventsButtons();
 
         this.setDisplay();
@@ -38,7 +41,7 @@ class Calculator{
     }
 
 
-    //adiciona evento aos botões
+    //passa os eventos que os botões irão receber
     eventsButtons(){
         this._btnsCalculator.forEach(btn=>{
             this.addEventListenerAll(btn,"click drag",()=>{
@@ -49,7 +52,10 @@ class Calculator{
     }
 
     clearEntry(){
-
+        this._operation.pop();
+        this._history.pop();
+        this.setDisplay();
+        this.setHistory();
     }
 
     clear(){
@@ -93,29 +99,63 @@ class Calculator{
 
     //altera o valor da operacao com o resultado do calculo e exibe no display
     equalClicked(){
+        if(this._operation.length < 3){
+            let firstNumber = this._operation[0];
+            this._operation = [firstNumber,this._lastOperator,this._lastNumber];
+        }
         let result = this.calc();
         this.setResultOperation(result);
         this.setDisplay();
-        this.setHistory();
-        this._history = [result];
+        this._equalClicked = true;
         console.log(this._operation);
+        console.log("lastOperator",this._lastOperator);
+        console.log("lastNumber",this._lastNumber);
     }
 
 
     //insere o valor do calculo na array da operação
-    setResultOperation(result){
-        this._operation = [result];
+    setResultOperation(result,lastOperation){
+        let newResult;
+        if(lastOperation){
+            newResult = [result,lastOperation];
+        }
+        else{
+            newResult = [result];
+        }
+        this._operation = newResult;
+        
     }
 
 
     //verifica se tem um segundo operador na operacao, se tiver faz o calculo da primeira expressão
     setCalc(){
+
+        this._lastOperator = this.getLastItem();
+
+
         if(this._operation.length>3){
             let lastOperation = this._operation.pop();
-            this.setResultOperation(this.calc());
-            this._operation.push(lastOperation);
-            console.log(lastOperation);
+            
+            this._lastNumber = this.calc();
+        
+
+            let result = this.calc();
+
+            if(lastOperation=="%"){
+                result /= 100;
+                this.setResultOperation(result);
+            }
+            else{
+                this.setResultOperation(result,lastOperation);
+            }
         }
+        else if(this._operation.length == 3){
+            this._lastNumber = this.getLastItem(false);
+        }
+
+        console.log("lastOperator",this._lastOperator);
+        console.log("lastNumber",this._lastNumber);
+
         this.setDisplay();
     }
 
@@ -129,17 +169,27 @@ class Calculator{
     }
 
 
+    //retorna um operador case seja passado um parametro true, ou não seja passado, ou numero caso seja false
+    getLastItem(isOperator = true){
+        let lastItem;
+        
+        for(let x=this._operation.length-1; x>=0; x--){
+
+            if(this.isOperator(this._operation[x]) == isOperator){
+                lastItem = this._operation[x];
+                break;
+            }
+
+        }
+
+        return lastItem;
+    }
+
+
     //exibe a operacao no display
     setDisplay(){
         
-        let lastNumberOperation;
-        
-        for(let x=this._operation.length-1; x>=0; x--){
-            if(!isNaN(this._operation[x])){
-                lastNumberOperation = this._operation[x];
-                break;
-            }
-        }
+        let lastNumberOperation = this.getLastItem(false);
 
         if(this._operation.length == 0){
             lastNumberOperation = 0;
@@ -198,7 +248,6 @@ class Calculator{
         this.setCalc();
         this.setDisplay();
         console.log(this._operation);
-        console.log("his",this._history);
     }
 
 
@@ -241,7 +290,6 @@ class Calculator{
                 break;
 
             case "equal":
-                this._equalClicked = true;
                 this.equalClicked();
                 break;
             

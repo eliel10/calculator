@@ -16,6 +16,8 @@
         text-align: right;
         color: colors.$textPrimary;
         font-weight: 500;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     .history{

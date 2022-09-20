@@ -9,7 +9,7 @@
     font-family: "Nanum", "sans-serif";
     font-size: 1.2rem;
     font-weight: 100;
-    transition: .2s background-color ease-in-out;
+    transition: .1s background-color ease-in-out;
 
     @include media.desktop{
         &:not(.aside,[data-value="equal"]):hover{
@@ -37,7 +37,6 @@
     }
 
     &:active{
-        transition: .1s ease-in-out;
         background-color: lighten(colors.$equalGreen, 50%);
     }
 }
@@ -52,7 +51,6 @@
     }
 
     &:active{
-        transition: .1s ease-in-out;
         background-color:lighten(colors.$operationGrey, 80%);
     }
 }
