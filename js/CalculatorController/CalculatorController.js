@@ -15,13 +15,19 @@ class Calculator{
         this._equalClicked = false;
         this._lastNumber = "";
         this._lastOperator = "";
+        this._audioClick = new Audio("audio/click.mp3");
+        this._audioOnOff = false;
         this.initialize();
+        this.initKeybord();
     }
 
 
     //metodo inicial da aplicação
     initialize(){
+        this.copyToClipboard();
+        this.pasteFromClipboard();
         this.setDateTime();
+        this.toggleAudio();
         
         setInterval(()=>{
             this.setDateTime();
@@ -30,6 +36,126 @@ class Calculator{
         this.eventsButtons();
 
         this.setDisplay();
+    }
+
+
+    //ativa e desativa o audio de click das teclas
+    toggleAudio(){
+        let btnActiveAudio = document.querySelector("[data-value=clear_entry]");
+        
+        btnActiveAudio.addEventListener("dblclick",()=>{
+            
+            this._audioOnOff = !this._audioOnOff;
+
+        })
+
+    }
+
+
+    //toca o audio das teclas
+    playAudio(){
+
+        if(this._audioOnOff){
+
+            this._audioClick.currentTime = 0;
+            this._audioClick.play();
+
+        }
+
+    }
+
+
+    //copia texto para área de transferência
+    copyToClipboard(){
+        let textSelected = this.display.toString();
+
+        let input = document.createElement("input");
+
+        document.body.appendChild(input);
+
+        input.value = textSelected;
+
+        input.select();
+
+        document.execCommand("Copy");
+
+        document.body.removeChild(input);
+    }
+
+
+    //cola texto da área de trasferência para o display
+    pasteFromClipboard(){
+
+        document.addEventListener("paste",e=>{
+            
+            let text = parseFloat(e.clipboardData.getData("Text"));
+
+            this.display = text;
+
+            this.addOperation(text);
+
+        })
+
+    }
+
+
+    //inicia eventos dos botões do teclado
+    initKeybord(){
+
+        document.addEventListener("keyup",e=>{
+
+            this.playAudio();
+
+            switch(e.key){
+
+                case "1":
+                case "2":
+                case "3":
+                case "4":
+                case "5":
+                case "6":
+                case "7":
+                case "8":
+                case "9":
+                case "0":
+                    this.addOperation(parseFloat(e.key));
+                    break;
+                    
+                case "/":
+                case "*":
+                case "-":
+                case "+":
+                case "%":
+                    this.addOperation(e.key);
+                    break;
+
+                case ".":
+                case ",":
+                    this.addDot();
+                    break;
+    
+                case "=":
+                case "Enter":
+                    this.equalClicked();
+                    break;
+                
+                case "Backspace":
+                    this.clearEntry();
+                    break;
+    
+                case "Escape":
+                    this.clear();
+                    break;
+
+                case "c":
+                    if(e.ctrlKey){
+                        this.copyToClipboard();
+                    }
+                    break;
+            }
+
+        })
+
     }
 
 
@@ -51,6 +177,8 @@ class Calculator{
         })
     }
 
+
+    //limpa a última entrada da operação
     clearEntry(){
         this._operation.pop();
         this._history.pop();
@@ -58,11 +186,15 @@ class Calculator{
         this.setHistory();
     }
 
+
+    //limpa toda a operação
     clear(){
         this._operation = [];
         this._history = [];
         this.setHistory();
         this.setDisplay();
+        this._lastNumber = "";
+        this._lastOperator = "";
     }
 
 
@@ -211,7 +343,7 @@ class Calculator{
     concatNumberOperation(valueButton){
         let concatNumber = this.getLastPositionOperation().toString() + valueButton.toString();
 
-        this.setLastPositionOperation(parseInt(concatNumber));
+        this.setLastPositionOperation(parseFloat(concatNumber));
 
         this.setLastPositionHistory(parseInt(concatNumber));
     }
@@ -251,8 +383,36 @@ class Calculator{
     }
 
 
+
+    //adiciona o ponto na operação
+    addDot(){
+        let lastOperation = this.getLastPositionOperation();
+        
+        if(this.isOperator(lastOperation) || !lastOperation){
+
+            this._operation.push("0.");
+            
+        }
+        else{
+            
+            if(typeof(lastOperation) === "string" && lastOperation.indexOf(".") > -1){
+
+                return;
+
+            }
+            
+            this.setLastPositionOperation(lastOperation.toString() + ".");
+        }
+
+        this.setDisplay();
+        console.log(this._operation);
+    }
+
+
     //recebe o botão clicado e executa a funcao correspondente a ele
     execButton(valueButton){
+
+        this.playAudio();
 
         switch(valueButton){
 
@@ -287,6 +447,10 @@ class Calculator{
 
             case "percent":
                 this.addOperation("%");
+                break;
+
+            case "dot":
+                this.addDot();
                 break;
 
             case "equal":
