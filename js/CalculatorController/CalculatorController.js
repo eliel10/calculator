@@ -118,7 +118,7 @@ class Calculator{
                 case "8":
                 case "9":
                 case "0":
-                    this.addOperation(parseFloat(e.key));
+                    this.addOperation(e.key);
                     break;
                     
                 case "/":
@@ -222,15 +222,26 @@ class Calculator{
 
     //transforma toda a operacao em string e usa o metodo eval para fazer e retornar o calculo
     calc(){
+
         let operation = this._operation.join("");
-        let result = eval(operation);
-        console.log(eval(operation));
+
+        let result = "";
+
+        try{
+            result = eval(operation);
+        }
+        catch(e){
+            setTimeout(()=>{
+                this.display = "Error";
+            },1)
+        }
         return result;
     }
 
 
     //altera o valor da operacao com o resultado do calculo e exibe no display
     equalClicked(){
+        if(this._operation.length == 0) return;
         if(this._operation.length < 3){
             let firstNumber = this._operation[0];
             this._operation = [firstNumber,this._lastOperator,this._lastNumber];
@@ -287,7 +298,7 @@ class Calculator{
 
         console.log("lastOperator",this._lastOperator);
         console.log("lastNumber",this._lastNumber);
-
+        
         this.setDisplay();
     }
 
@@ -343,9 +354,9 @@ class Calculator{
     concatNumberOperation(valueButton){
         let concatNumber = this.getLastPositionOperation().toString() + valueButton.toString();
 
-        this.setLastPositionOperation(parseFloat(concatNumber));
+        this.setLastPositionOperation((concatNumber));
 
-        this.setLastPositionHistory(parseInt(concatNumber));
+        this.setLastPositionHistory((concatNumber));
     }
 
 
@@ -354,6 +365,9 @@ class Calculator{
         this.equalIsClicked(valueButton);
         if(isNaN(this.getLastPositionOperation())){
             if(!isNaN(valueButton)){
+                if(valueButton == 0){
+                    return;
+                }
                 this._operation.push(valueButton);
                 this._history.push(valueButton);
             }
@@ -426,7 +440,7 @@ class Calculator{
             case "8":
             case "9":
             case "0":
-                this.addOperation(parseInt(valueButton));
+                this.addOperation(valueButton);
                 break;
 
             case "division":
