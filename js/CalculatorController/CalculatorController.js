@@ -250,9 +250,6 @@ class Calculator{
         this.setResultOperation(result);
         this.setDisplay();
         this._equalClicked = true;
-        console.log(this._operation);
-        console.log("lastOperator",this._lastOperator);
-        console.log("lastNumber",this._lastNumber);
     }
 
 
@@ -295,9 +292,6 @@ class Calculator{
         else if(this._operation.length == 3){
             this._lastNumber = this.getLastItem(false);
         }
-
-        console.log("lastOperator",this._lastOperator);
-        console.log("lastNumber",this._lastNumber);
         
         this.setDisplay();
     }
@@ -393,7 +387,6 @@ class Calculator{
 
         this.setCalc();
         this.setDisplay();
-        console.log(this._operation);
     }
 
 
@@ -419,7 +412,6 @@ class Calculator{
         }
 
         this.setDisplay();
-        console.log(this._operation);
     }
 
 

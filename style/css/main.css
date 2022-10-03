@@ -88,10 +88,6 @@ button {
   background-color: rgba(207, 207, 207, 0.8);
 }
 
-.btn[data-value="0"] {
-  grid-column: span 2;
-}
-
 .btn[data-value=equal] {
   background-color: rgb(37, 145, 109);
 }

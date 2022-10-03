@@ -23,9 +23,6 @@
     }
 }
 
-.btn[data-value="0"]{
-    grid-column: span 2;
-}
 
 .btn[data-value="equal"]{
     background-color: colors.$equalGreen;
