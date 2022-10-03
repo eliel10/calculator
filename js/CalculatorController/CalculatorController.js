@@ -140,7 +140,7 @@ class Calculator{
                     break;
                 
                 case "Backspace":
-                    this.clearEntry();
+                    this.removeLastNumber();
                     break;
     
                 case "Escape":
@@ -198,6 +198,31 @@ class Calculator{
     }
 
 
+    //exclui o último número digitado
+    removeLastNumber(){
+
+        let lastNumberOperation = this.getLastPositionOperation();
+
+        if(typeof lastNumberOperation == "string" && !isNaN(lastNumberOperation)){
+
+            let lastNumberOperationList = lastNumberOperation.split("");
+
+            lastNumberOperationList.pop();
+
+            if(lastNumberOperationList.length == 0){
+                this._operation.pop();
+                this.setDisplay(true);
+                return;
+            }
+
+            this.setLastPositionOperation(lastNumberOperationList.join(""));
+            this.setDisplay();
+            
+        }
+
+    }
+
+
     //retorna o ultimo valor inserido na operação
     getLastPositionOperation(){
         return this._operation.at(-1);
@@ -250,6 +275,8 @@ class Calculator{
         this.setResultOperation(result);
         this.setDisplay();
         this._equalClicked = true;
+
+        console.log(this._operation);
     }
 
 
@@ -324,11 +351,11 @@ class Calculator{
 
 
     //exibe a operacao no display
-    setDisplay(){
+    setDisplay(zero){
         
         let lastNumberOperation = this.getLastItem(false);
 
-        if(this._operation.length == 0){
+        if(this._operation.length == 0 || zero){
             lastNumberOperation = 0;
         }
 
@@ -469,6 +496,10 @@ class Calculator{
 
             case "clear":
                 this.clear();
+                break;
+
+            case "remove":
+                this.removeLastNumber();
                 break;
             
             default:

@@ -88,6 +88,10 @@ button {
   background-color: rgba(207, 207, 207, 0.8);
 }
 
+.icon-delete {
+  color: black;
+}
+
 .btn[data-value=equal] {
   background-color: rgb(37, 145, 109);
 }
