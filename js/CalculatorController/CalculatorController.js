@@ -88,11 +88,11 @@ class Calculator{
 
         document.addEventListener("paste",e=>{
             
-            let text = parseFloat(e.clipboardData.getData("Text"));
-
-            this.display = text;
+            let text = e.clipboardData.getData("Text");
 
             this.addOperation(text);
+
+            this.setDisplay();
 
         })
 
@@ -129,7 +129,6 @@ class Calculator{
                     this.addOperation(e.key);
                     break;
 
-                case ".":
                 case ",":
                     this.addDot();
                     break;
@@ -260,7 +259,7 @@ class Calculator{
                 this.display = "Error";
             },1)
         }
-        return result;
+        return result.toString();
     }
 
 
@@ -275,8 +274,6 @@ class Calculator{
         this.setResultOperation(result);
         this.setDisplay();
         this._equalClicked = true;
-
-        console.log(this._operation);
     }
 
 
@@ -350,16 +347,40 @@ class Calculator{
     }
 
 
+    //insere mascara para casas decimais
+    setMaskDisplay(operation){
+        
+        let mask = /(\d)(?=(\d{3})+(?!\d))/g;
+
+        let operationMask = operation.toString().replace(mask,"$1.");
+
+        return operationMask;
+    }
+
     //exibe a operacao no display
     setDisplay(zero){
         
         let lastNumberOperation = this.getLastItem(false);
+        
+        let indiceDot;
+
+        indiceDot = lastNumberOperation != undefined ? lastNumberOperation.indexOf(".") : -1;
+
+        if(indiceDot>-1){
+
+            let lastNumberOperationList = lastNumberOperation.split("");
+
+            lastNumberOperationList[indiceDot] = ",";
+
+            lastNumberOperation = lastNumberOperationList.join("");
+        }
 
         if(this._operation.length == 0 || zero){
             lastNumberOperation = 0;
         }
 
-        this.display = lastNumberOperation;
+        this.display = this.setMaskDisplay(lastNumberOperation);
+
     }
 
 
