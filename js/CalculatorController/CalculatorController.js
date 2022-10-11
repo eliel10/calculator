@@ -88,9 +88,17 @@ class Calculator{
 
         document.addEventListener("paste",e=>{
             
-            let text = e.clipboardData.getData("Text");
+            let textPaste = e.clipboardData.getData("Text");
+            
+            let indiceDot = textPaste.indexOf(".");
 
-            this.addOperation(text);
+            let textPasteList = textPaste.split("");
+
+            textPasteList[indiceDot] = "";
+
+            textPaste = textPasteList.join("");
+
+            this.addOperation(textPaste);
 
             this.setDisplay();
 
