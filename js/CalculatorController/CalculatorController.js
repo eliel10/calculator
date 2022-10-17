@@ -261,9 +261,7 @@ class Calculator{
 
         try{
             result = eval(operation).toString();
-            if(this.hasDot(result)){
-                result = parseFloat(result).toFixed(2).toString();
-            }
+            result = this.resultOperationDecimals(result);
         }
         catch(e){
             setTimeout(()=>{
@@ -273,6 +271,15 @@ class Calculator{
         return result;
     }
 
+
+    //retorna duas casas decimais do resultado
+    resultOperationDecimals(result){
+
+        let newResult = this.hasDot(result) ? parseFloat(result).toFixed(2).toString() : result;
+
+        return newResult;
+
+    }
 
     //altera o valor da operacao com o resultado do calculo e exibe no display
     equalClicked(){
@@ -290,13 +297,11 @@ class Calculator{
 
     //insere o valor do calculo na array da operação
     setResultOperation(result,lastOperation){
-        let newResult;
-        if(lastOperation){
-            newResult = [result,lastOperation];
-        }
-        else{
-            newResult = [result];
-        }
+
+        result=this.resultOperationDecimals(result);
+
+        let newResult = lastOperation ? [result,lastOperation] : [result];
+
         this._operation = newResult;
         
     }
@@ -391,7 +396,6 @@ class Calculator{
         }
 
         this.display = this.setMaskDisplay(lastNumberOperation);
-        console.log(this._operation);
     }
 
 
