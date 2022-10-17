@@ -260,14 +260,17 @@ class Calculator{
         let result = "";
 
         try{
-            result = eval(operation);
+            result = eval(operation).toString();
+            if(this.hasDot(result)){
+                result = parseFloat(result).toFixed(2).toString();
+            }
         }
         catch(e){
             setTimeout(()=>{
                 this.display = "Error";
             },1)
         }
-        return result.toString();
+        return result;
     }
 
 
@@ -311,14 +314,14 @@ class Calculator{
             this._lastNumber = this.calc();
         
 
-            let result = this.calc();
+            let result = parseFloat(this.calc());
 
             if(lastOperation=="%"){
                 result /= 100;
-                this.setResultOperation(result);
+                this.setResultOperation(result.toString());
             }
             else{
-                this.setResultOperation(result,lastOperation);
+                this.setResultOperation(result.toString(),lastOperation);
             }
         }
         else if(this._operation.length == 3){
@@ -388,7 +391,7 @@ class Calculator{
         }
 
         this.display = this.setMaskDisplay(lastNumberOperation);
-
+        console.log(this._operation);
     }
 
 
@@ -458,7 +461,7 @@ class Calculator{
         }
         else{
             
-            if(typeof(lastOperation) === "string" && lastOperation.indexOf(".") > -1){
+            if(typeof(lastOperation) === "string" && this.hasDot(lastOperation)){
 
                 return;
 
@@ -468,6 +471,14 @@ class Calculator{
         }
 
         this.setDisplay();
+    }
+
+
+    //verifica se string tem .(dot)
+    hasDot(text){
+
+        return text.indexOf(".") > -1;
+
     }
 
 

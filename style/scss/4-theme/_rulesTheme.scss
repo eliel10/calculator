@@ -5,6 +5,10 @@
 .theme{
     text-align: center;
 
+    & button{
+        background-color: transparent;
+    }
+
     .icon-theme{
         font-size: 1.2rem;
         margin: 0;

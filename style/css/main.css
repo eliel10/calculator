@@ -115,6 +115,9 @@ button {
 .theme {
   text-align: center;
 }
+.theme button {
+  background-color: transparent;
+}
 .theme .icon-theme {
   font-size: 1.2rem;
   margin: 0;
