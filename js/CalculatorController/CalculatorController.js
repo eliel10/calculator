@@ -92,9 +92,13 @@ class Calculator{
             
             let indiceDot = textPaste.indexOf(".");
 
+            let indiceComma = textPaste.indexOf(",");
+
             let textPasteList = textPaste.split("");
 
             textPasteList[indiceDot] = "";
+
+            textPasteList[indiceComma] = ".";
 
             textPaste = textPasteList.join("");
 
@@ -287,10 +291,12 @@ class Calculator{
         if(this._operation.length < 3){
             let firstNumber = this._operation[0];
             this._operation = [firstNumber,this._lastOperator,this._lastNumber];
+            this._history = [firstNumber,this._lastOperator,this._lastNumber];
         }
         let result = this.calc();
         this.setResultOperation(result);
         this.setDisplay();
+        this.setHistory();
         this._equalClicked = true;
     }
 
@@ -317,7 +323,6 @@ class Calculator{
             let lastOperation = this._operation.pop();
             
             this._lastNumber = this.calc();
-        
 
             let result = parseFloat(this.calc());
 
