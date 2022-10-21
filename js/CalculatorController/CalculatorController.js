@@ -15,8 +15,6 @@ class Calculator{
         this._equalClicked = false;
         this._lastNumber = "";
         this._lastOperator = "";
-        this._audioClick = new Audio("audio/click.mp3");
-        this._audioOnOff = false;
         this.initialize();
         this.initKeybord();
     }
@@ -27,7 +25,6 @@ class Calculator{
         this.copyToClipboard();
         this.pasteFromClipboard();
         this.setDateTime();
-        this.toggleAudio();
         
         setInterval(()=>{
             this.setDateTime();
@@ -39,56 +36,24 @@ class Calculator{
     }
 
 
-    //ativa e desativa o audio de click das teclas
-    toggleAudio(){
-        let btnActiveAudio = document.querySelector("[data-value=clear_entry]");
-        
-        btnActiveAudio.addEventListener("dblclick",()=>{
-            
-            this._audioOnOff = !this._audioOnOff;
-
-        })
-
-    }
-
-
-    //toca o audio das teclas
-    playAudio(){
-
-        if(this._audioOnOff){
-
-            this._audioClick.currentTime = 0;
-            this._audioClick.play();
-
-        }
-
-    }
-
-
     //copia texto para área de transferência
     copyToClipboard(){
-        let textSelected = this.display.toString();
 
-        let input = document.createElement("input");
-
-        document.body.appendChild(input);
-
-        input.value = textSelected;
-
-        input.select();
-
-        document.execCommand("Copy");
-
-        document.body.removeChild(input);
+        let textSelected = this.display;
+        
+        navigator.clipboard.writeText(textSelected);
+        
     }
 
 
     //cola texto da área de trasferência para o display
     pasteFromClipboard(){
 
-        document.addEventListener("paste",e=>{
+        document.addEventListener("paste", async e=>{
             
-            let textPaste = e.clipboardData.getData("Text");
+            let textPaste = navigator.clipboard.readText();
+
+            textPaste = await textPaste;
             
             let indiceDot = textPaste.indexOf(".");
 
@@ -115,8 +80,6 @@ class Calculator{
     initKeybord(){
 
         document.addEventListener("keyup",e=>{
-
-            this.playAudio();
 
             switch(e.key){
 
@@ -202,10 +165,11 @@ class Calculator{
     clear(){
         this._operation = [];
         this._history = [];
-        this.setHistory();
-        this.setDisplay();
         this._lastNumber = "";
         this._lastOperator = "";
+        this._equalClicked = false;
+        this.setHistory();
+        this.setDisplay();
     }
 
 
@@ -213,20 +177,25 @@ class Calculator{
     removeLastNumber(){
 
         let lastNumberOperation = this.getLastPositionOperation();
+        let lastNumberHistory = this.getLastPositionHistory();
 
         if(typeof lastNumberOperation == "string" && !isNaN(lastNumberOperation)){
 
             let lastNumberOperationList = lastNumberOperation.split("");
+            let lastNumberHistoryList = lastNumberHistory.split("");
 
             lastNumberOperationList.pop();
+            lastNumberHistoryList.pop();
 
             if(lastNumberOperationList.length == 0){
                 this._operation.pop();
+                this._history.pop();
                 this.setDisplay(true);
                 return;
             }
 
             this.setLastPositionOperation(lastNumberOperationList.join(""));
+            this.setLastPositionHistory(lastNumberHistoryList.join(""));
             this.setDisplay();
             
         }
@@ -237,6 +206,11 @@ class Calculator{
     //retorna o ultimo valor inserido na operação
     getLastPositionOperation(){
         return this._operation.at(-1);
+    }
+
+
+    getLastPositionHistory(){
+        return this._history.at(-1);
     }
 
 
@@ -317,8 +291,7 @@ class Calculator{
     setCalc(){
 
         this._lastOperator = this.getLastItem();
-
-
+        
         if(this._operation.length>3){
             let lastOperation = this._operation.pop();
             
@@ -344,10 +317,9 @@ class Calculator{
 
     //verifica se o igual foi clicado e o proximo botão clicado foi um numero, se sim, zera a operação
     equalIsClicked(valueButton){
-        if(this._equalClicked && !isNaN(valueButton)){
+        if(this._equalClicked && !isNaN(valueButton) && this._operation.length == 1){
             this.clear();
         }
-        this._equalClicked = false;
     }
 
 
@@ -370,12 +342,18 @@ class Calculator{
 
     //insere mascara para casas decimais
     setMaskDisplay(operation){
-        
+
         let mask = /(\d)(?=(\d{3})+(?!\d))/g;
+        
+        let operationValue = operation.toString();
+        
+        if(operationValue.indexOf(",")>-1){
 
-        let operationMask = operation.toString().replace(mask,"$1.");
+            mask = /(\d)(?=(\d{3})+(?!\d),)/g;
 
-        return operationMask;
+        }
+
+        return operationValue.replace(mask,"$1.");
     }
 
     //exibe a operacao no display
@@ -412,9 +390,9 @@ class Calculator{
 
 
 
-    //concatena os numeros digitados na calculadora
+    //concatena os numeros digitados na calculadora "0."
     concatNumberOperation(valueButton){
-        let concatNumber = this.getLastPositionOperation().toString() + valueButton.toString();
+        let concatNumber = this.getLastPositionOperation() + valueButton;
 
         this.setLastPositionOperation((concatNumber));
 
@@ -438,9 +416,6 @@ class Calculator{
                 this.setLastPositionHistory(valueButton);
                 this.setHistory();
             }
-            else{
-
-            }
         }
         else{
             if(this.isOperator(valueButton)){
@@ -462,10 +437,11 @@ class Calculator{
     //adiciona o ponto na operação
     addDot(){
         let lastOperation = this.getLastPositionOperation();
-        
+    
         if(this.isOperator(lastOperation) || !lastOperation){
-
+            
             this._operation.push("0.");
+            this._history.push("0.");
             
         }
         else{
@@ -493,8 +469,6 @@ class Calculator{
 
     //recebe o botão clicado e executa a funcao correspondente a ele
     execButton(valueButton){
-
-        this.playAudio();
 
         switch(valueButton){
 
