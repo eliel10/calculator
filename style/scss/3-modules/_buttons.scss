@@ -12,19 +12,18 @@
     transition: .1s background-color ease-in-out;
 
     @include media.desktop{
-        &:not(.aside,[data-value="equal"]):hover{
+        &:not(.aside,[data-value="="]):hover{
             background-color: lighten(colors.$numericBlac, 50%);
         }
     }
 
-    &:not(.aside,[data-value="equal"]):active{
+    &:not(.aside,[data-value="="]):active{
         transition: .1s ease-in-out;
         background-color: lighten(colors.$numericBlac, 80%);
     }
 }
 
-
-.btn[data-value="equal"]{
+.btn-equal{
     background-color: colors.$equalGreen;
 
     @include media.desktop{
@@ -52,3 +51,8 @@
     }
 }
 
+
+.btnClickedKeyboard{
+    transition: .1s ease-in-out;
+    background-color: lighten(colors.$numericBlac, 80%);
+}

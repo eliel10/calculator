@@ -25,6 +25,7 @@ class Calculator{
         this.copyToClipboard();
         this.pasteFromClipboard();
         this.setDateTime();
+        this.animationButtonClicked();
         
         setInterval(()=>{
             this.setDateTime();
@@ -76,10 +77,29 @@ class Calculator{
     }
 
 
+    //coloca background no butão da calculadora quando pressionado a tecla no teclado
+    animationButtonClicked(btnKeyboard){
+        
+        this._btnsCalculator.forEach(btnCalc=>{
+            
+            if(btnCalc.dataset.value==btnKeyboard || btnCalc.textContent==btnKeyboard){
+                
+                btnCalc.classList.toggle("btnClickedKeyboard");
+                setTimeout(()=>btnCalc.classList.toggle("btnClickedKeyboard"),100);
+
+            }
+
+        })
+
+    }
+
+
     //inicia eventos dos botões do teclado
     initKeybord(){
 
         document.addEventListener("keyup",e=>{
+
+            this.animationButtonClicked(e.key);
 
             switch(e.key){
 
@@ -485,19 +505,19 @@ class Calculator{
                 this.addOperation(valueButton);
                 break;
 
-            case "division":
+            case "/":
                 this.addOperation("/");
                 break;
             
-            case "multiplication":
+            case "*":
                 this.addOperation("*");
                 break;
             
-            case "subtraction":
+            case "-":
                 this.addOperation("-");
                 break;
 
-            case "addition":
+            case "+":
                 this.addOperation("+");
                 break;
 
@@ -505,11 +525,11 @@ class Calculator{
                 this.addOperation("%");
                 break;
 
-            case "dot":
+            case ",":
                 this.addDot();
                 break;
 
-            case "equal":
+            case "Enter":
                 this.equalClicked();
                 break;
             
@@ -517,11 +537,11 @@ class Calculator{
                 this.clearEntry();
                 break;
 
-            case "clear":
+            case "Escape":
                 this.clear();
                 break;
 
-            case "remove":
+            case "Backspace":
                 this.removeLastNumber();
                 break;
             

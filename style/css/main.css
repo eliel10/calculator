@@ -79,24 +79,24 @@ button {
   transition: 0.1s background-color ease-in-out;
 }
 @media (min-width: 1024px) {
-  .btn:not(.aside, [data-value=equal]):hover {
+  .btn:not(.aside, [data-value="="]):hover {
     background-color: rgba(131, 131, 131, 0.8);
   }
 }
-.btn:not(.aside, [data-value=equal]):active {
+.btn:not(.aside, [data-value="="]):active {
   transition: 0.1s ease-in-out;
   background-color: rgba(207, 207, 207, 0.8);
 }
 
-.btn[data-value=equal] {
+.btn-equal {
   background-color: rgb(37, 145, 109);
 }
 @media (min-width: 1024px) {
-  .btn[data-value=equal]:hover {
+  .btn-equal:hover {
     background-color: #4bd1a4;
   }
 }
-.btn[data-value=equal]:active {
+.btn-equal:active {
   background-color: #c5f0e2;
 }
 
@@ -110,6 +110,11 @@ button {
 }
 .aside:active {
   background-color: rgba(243, 243, 243, 0.4);
+}
+
+.btnClickedKeyboard {
+  transition: 0.1s ease-in-out;
+  background-color: rgba(207, 207, 207, 0.8);
 }
 
 .theme {
