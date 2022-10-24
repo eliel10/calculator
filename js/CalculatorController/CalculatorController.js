@@ -16,7 +16,6 @@ class Calculator{
         this._lastNumber = "";
         this._lastOperator = "";
         this.initialize();
-        this.initKeybord();
     }
 
 
@@ -26,12 +25,13 @@ class Calculator{
         this.pasteFromClipboard();
         this.setDateTime();
         this.animationButtonClicked();
+        this.initKeybord();
+        this.eventsButtons();
         
         setInterval(()=>{
             this.setDateTime();
         })
 
-        this.eventsButtons();
 
         this.setDisplay();
     }
@@ -97,10 +97,10 @@ class Calculator{
     //inicia eventos dos botões do teclado
     initKeybord(){
 
-        document.addEventListener("keyup",e=>{
+        document.addEventListener("keydown",e=>{
 
             this.animationButtonClicked(e.key);
-
+            
             switch(e.key){
 
                 case "1":
@@ -141,6 +141,10 @@ class Calculator{
                     this.clear();
                     break;
 
+                case "Delete":
+                    this.clearEntry();
+                    break;
+
                 case "c":
                     if(e.ctrlKey){
                         this.copyToClipboard();
@@ -164,7 +168,7 @@ class Calculator{
     //passa os eventos que os botões irão receber
     eventsButtons(){
         this._btnsCalculator.forEach(btn=>{
-            this.addEventListenerAll(btn,"click drag",()=>{
+            this.addEventListenerAll(btn,"mousedown drag",()=>{
                 let valueButton = btn.dataset.value;
                 this.execButton(valueButton);
             })
@@ -183,6 +187,7 @@ class Calculator{
 
     //limpa toda a operação
     clear(){
+
         this._operation = [];
         this._history = [];
         this._lastNumber = "";
@@ -190,6 +195,7 @@ class Calculator{
         this._equalClicked = false;
         this.setHistory();
         this.setDisplay();
+
     }
 
 
@@ -282,15 +288,25 @@ class Calculator{
     //altera o valor da operacao com o resultado do calculo e exibe no display
     equalClicked(){
         if(this._operation.length == 0) return;
+
         if(this._operation.length < 3){
+
             let firstNumber = this._operation[0];
+
             this._operation = [firstNumber,this._lastOperator,this._lastNumber];
+
             this._history = [firstNumber,this._lastOperator,this._lastNumber];
+
         }
+
         let result = this.calc();
+
         this.setResultOperation(result);
+
         this.setDisplay();
+
         this.setHistory();
+
         this._equalClicked = true;
     }
 
@@ -424,8 +440,11 @@ class Calculator{
     addOperation(valueButton){
         this.equalIsClicked(valueButton);
         if(isNaN(this.getLastPositionOperation())){
+            
             if(!isNaN(valueButton)){
+                
                 if(valueButton == 0){
+                    
                     return;
                 }
                 this._operation.push(valueButton);
@@ -439,6 +458,7 @@ class Calculator{
         }
         else{
             if(this.isOperator(valueButton)){
+                
                 this._operation.push(valueButton);
                 this._history.push(valueButton);
                 this.setHistory();
@@ -489,7 +509,7 @@ class Calculator{
 
     //recebe o botão clicado e executa a funcao correspondente a ele
     execButton(valueButton){
-
+        
         switch(valueButton){
 
             case "1":
@@ -521,7 +541,7 @@ class Calculator{
                 this.addOperation("+");
                 break;
 
-            case "percent":
+            case "%":
                 this.addOperation("%");
                 break;
 
@@ -533,7 +553,7 @@ class Calculator{
                 this.equalClicked();
                 break;
             
-            case "clear_entry":
+            case "Delete":
                 this.clearEntry();
                 break;
 
