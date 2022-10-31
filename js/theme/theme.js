@@ -19,7 +19,6 @@ class Theme{
 
     //verifica qual a classe atual do tema e altera
     setIconTheme(){
-        console.log(this._iconTheme);
         if(this.containsClass(this._container,this._darkThemeClass)){
             this.toggleThemeIcon(this._lightThemeIcon,this._darkThemeIcon);
             this.toggleThemeClass(this._darkThemeClass,this._lightThemeClass);

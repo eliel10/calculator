@@ -39,11 +39,7 @@
 
 ## Vídeo
 
-<br>
 
-<video width="1000" controls>
-    <source src="preview/calculator-e.mp4" type="video/mp4">
-</video>
 
 ---
 
