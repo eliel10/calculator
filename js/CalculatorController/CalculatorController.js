@@ -1,7 +1,6 @@
 class Calculator{
 
 
-    //metodo construtor da classe Calculator
     constructor(){
         this.locale = "pt-BR";
         this._btnsCalculator = document.querySelectorAll("[data-value]");
@@ -19,17 +18,17 @@ class Calculator{
     }
 
 
-    //metodo inicial da aplicação
     initialize(){
+        
         this.copyToClipboard();
         this.pasteFromClipboard();
         this.setDateTime();
-        this.animationButtonClicked();
-        this.initKeybord();
         this.eventsButtons();
         
         setInterval(()=>{
+
             this.setDateTime();
+
         })
 
 
@@ -77,7 +76,7 @@ class Calculator{
     }
 
 
-    //coloca background no butão da calculadora quando pressionado a tecla no teclado
+    //coloca background no botão da calculadora quando pressionado a tecla do teclado
     animationButtonClicked(btnKeyboard){
         
         this._btnsCalculator.forEach(btnCalc=>{
@@ -85,6 +84,7 @@ class Calculator{
             if(btnCalc.dataset.value==btnKeyboard || btnCalc.textContent==btnKeyboard){
                 
                 btnCalc.classList.toggle("btnClickedKeyboard");
+
                 setTimeout(()=>btnCalc.classList.toggle("btnClickedKeyboard"),100);
 
             }
@@ -94,94 +94,54 @@ class Calculator{
     }
 
 
-    //inicia eventos dos botões do teclado
-    initKeybord(){
-
-        document.addEventListener("keydown",e=>{
-
-            this.animationButtonClicked(e.key);
-            
-            switch(e.key){
-
-                case "1":
-                case "2":
-                case "3":
-                case "4":
-                case "5":
-                case "6":
-                case "7":
-                case "8":
-                case "9":
-                case "0":
-                    this.addOperation(e.key);
-                    break;
-                    
-                case "/":
-                case "*":
-                case "-":
-                case "+":
-                case "%":
-                    this.addOperation(e.key);
-                    break;
-
-                case ",":
-                    this.addDot();
-                    break;
-    
-                case "=":
-                case "Enter":
-                    this.equalClicked();
-                    break;
-                
-                case "Backspace":
-                    this.removeLastNumber();
-                    break;
-    
-                case "Escape":
-                    this.clear();
-                    break;
-
-                case "Delete":
-                    this.clearEntry();
-                    break;
-
-                case "c":
-                    if(e.ctrlKey){
-                        this.copyToClipboard();
-                    }
-                    break;
-            }
-
-        })
-
-    }
-
-
     //adiciona mais de um evento aos botões
     addEventListenerAll(element,events,fn){
+
         events.split(" ").forEach(event=>{
+
             element.addEventListener(event,fn);
+
         })
+
     }
 
 
     //passa os eventos que os botões irão receber
     eventsButtons(){
+
         this._btnsCalculator.forEach(btn=>{
+
             this.addEventListenerAll(btn,"mousedown drag",()=>{
+
                 let valueButton = btn.dataset.value;
+
                 this.execButton(valueButton);
+
             })
+
         })
+
+        document.addEventListener("keydown",tecla=>{
+
+            this.animationButtonClicked(tecla.key);
+            
+            let copy = tecla.ctrlKey ? true : false;
+
+            this.execButton(tecla.key,copy);
+
+        })
+
     }
 
 
     //limpa a última entrada da operação
     clearEntry(){
+
         this._operation.pop();
         this._history.pop();
         this.setDisplay();
         this.setHistory();
+
     }
 
 
@@ -202,8 +162,8 @@ class Calculator{
     //exclui o último número digitado
     removeLastNumber(){
 
-        let lastNumberOperation = this.getLastPositionOperation();
-        let lastNumberHistory = this.getLastPositionHistory();
+        let lastNumberOperation = this.getLastPosition();
+        let lastNumberHistory = this.getLastPosition(false);
 
         if(typeof lastNumberOperation == "string" && !isNaN(lastNumberOperation)){
 
@@ -215,28 +175,32 @@ class Calculator{
 
             if(lastNumberOperationList.length == 0){
                 this._operation.pop();
+
                 this._history.pop();
+
                 this.setDisplay(true);
+
                 return;
             }
 
-            this.setLastPositionOperation(lastNumberOperationList.join(""));
-            this.setLastPositionHistory(lastNumberHistoryList.join(""));
+            this.setLastPosition(lastNumberOperationList.join(""));
+            this.setLastPosition(lastNumberHistoryList.join(""),false);
             this.setDisplay();
             
         }
 
     }
 
+    //retorna o ultimo valor inserido na operação ou no histórico
+    getLastPosition(operation = true){
 
-    //retorna o ultimo valor inserido na operação
-    getLastPositionOperation(){
-        return this._operation.at(-1);
-    }
+        if(operation){
+            return this._operation.at(-1);
+        }
+        else{
+            return this._history.at(-1);
+        }
 
-
-    getLastPositionHistory(){
-        return this._history.at(-1);
     }
 
 
@@ -245,14 +209,22 @@ class Calculator{
         return (['+','-','*','/','.','%'].indexOf(value) > -1);
     }
 
-    //altera ou adiciona um valor a ultima operação da calculadora
-    setLastPositionOperation(value){
-        this._operation[this._operation.length-1]=value;
+    //altera ou adiciona um valor a última operação ou histórico da calculadora
+    setLastPosition(value,operation = true){
+        if(operation){
+            this._operation[this._operation.length-1]=value;
+        }
+        else{
+            this._history[this._history.length-1]=value;
+        }
     }
 
-    //altera ou adiciona um valor a ultima posição do histórico da calculadora
-    setLastPositionHistory(value){
-        this._history[this._history.length-1]=value;
+
+    //verifica se o último número da operação ultrapassa 10 digitos, ou igual
+    isLargerLastNumberOperation(){
+        let lastNumberOperation = this.getLastPosition();
+
+        if(lastNumberOperation && lastNumberOperation.length>=10) return true;
     }
 
 
@@ -268,8 +240,11 @@ class Calculator{
             result = this.resultOperationDecimals(result);
         }
         catch(e){
+
             setTimeout(()=>{
+
                 this.display = "Error";
+                
             },1)
         }
         return result;
@@ -329,6 +304,7 @@ class Calculator{
         this._lastOperator = this.getLastItem();
         
         if(this._operation.length>3){
+
             let lastOperation = this._operation.pop();
             
             this._lastNumber = this.calc();
@@ -337,14 +313,20 @@ class Calculator{
 
             if(lastOperation=="%"){
                 result /= 100;
+
                 this.setResultOperation(result.toString());
+
             }
             else{
+
                 this.setResultOperation(result.toString(),lastOperation);
+
             }
         }
         else if(this._operation.length == 3){
+
             this._lastNumber = this.getLastItem(false);
+
         }
         
         this.setDisplay();
@@ -353,8 +335,11 @@ class Calculator{
 
     //verifica se o igual foi clicado e o proximo botão clicado foi um numero, se sim, zera a operação
     equalIsClicked(valueButton){
+
         if(this._equalClicked && !isNaN(valueButton) && this._operation.length == 1){
+
             this.clear();
+
         }
     }
 
@@ -392,6 +377,7 @@ class Calculator{
         return operationValue.replace(mask,"$1.");
     }
 
+
     //exibe a operacao no display
     setDisplay(zero){
         
@@ -421,25 +407,28 @@ class Calculator{
     //exibe o historico da operação no display
     setHistory(){
         let historyValue = this._history.length == 0 ? "" : this._history.join(" ");
+
         this.history = historyValue;
     }
 
 
 
-    //concatena os numeros digitados na calculadora "0."
+    //concatena os numeros digitados na calculadora
     concatNumberOperation(valueButton){
-        let concatNumber = this.getLastPositionOperation() + valueButton;
+        let concatNumber = this.getLastPosition() + valueButton;
 
-        this.setLastPositionOperation((concatNumber));
+        this.setLastPosition((concatNumber));
 
-        this.setLastPositionHistory((concatNumber));
+        this.setLastPosition((concatNumber),false);
     }
 
 
     //adiciona os valores e operadores na operação da calculadora
     addOperation(valueButton){
+
         this.equalIsClicked(valueButton);
-        if(isNaN(this.getLastPositionOperation())){
+
+        if(isNaN(this.getLastPosition())){
             
             if(!isNaN(valueButton)){
                 
@@ -447,24 +436,27 @@ class Calculator{
                     
                     return;
                 }
-                this._operation.push(valueButton);
-                this._history.push(valueButton);
+
+                this.insertValueOperation(valueButton);
             }
             else if(this.isOperator(valueButton)){
-                this.setLastPositionOperation(valueButton);
-                this.setLastPositionHistory(valueButton);
-                this.setHistory();
+
+                this.setLastOpetator(valueButton);
+
             }
         }
         else{
             if(this.isOperator(valueButton)){
                 
-                this._operation.push(valueButton);
-                this._history.push(valueButton);
+                this.insertValueOperation(valueButton);
                 this.setHistory();
+
             }
             else{
+
+                if(this.isLargerLastNumberOperation()) return;
                 this.concatNumberOperation(valueButton);
+
             }
         }
 
@@ -473,10 +465,28 @@ class Calculator{
     }
 
 
+    //altera o operador na última posição da operação e no histórico
+    setLastOpetator(valueButton){
+
+        this.setLastPosition(valueButton);
+        this.setLastPosition(valueButton,false);
+        this.setHistory();
+
+    }
+
+    
+    //adiciona o valor na operação e no histórico
+    insertValueOperation(valueButton){
+
+        this._operation.push(valueButton);
+        this._history.push(valueButton);
+
+    }
+
 
     //adiciona o ponto na operação
     addDot(){
-        let lastOperation = this.getLastPositionOperation();
+        let lastOperation = this.getLastPosition();
     
         if(this.isOperator(lastOperation) || !lastOperation){
             
@@ -492,23 +502,23 @@ class Calculator{
 
             }
             
-            this.setLastPositionOperation(lastOperation.toString() + ".");
+            this.setLastPosition(lastOperation.toString() + ".");
         }
 
         this.setDisplay();
     }
 
 
-    //verifica se string tem .(dot)
-    hasDot(text){
+    //verifica se a expressão tem "."
+    hasDot(value){
 
-        return text.indexOf(".") > -1;
+        return value.indexOf(".") > -1;
 
     }
 
 
-    //recebe o botão clicado e executa a funcao correspondente a ele
-    execButton(valueButton){
+    //recebe o botão clicado(digital ou do teclado) e executa a funcao correspondente a ele
+    execButton(valueButton,copy){
         
         switch(valueButton){
 
@@ -522,27 +532,12 @@ class Calculator{
             case "8":
             case "9":
             case "0":
-                this.addOperation(valueButton);
-                break;
-
             case "/":
-                this.addOperation("/");
-                break;
-            
             case "*":
-                this.addOperation("*");
-                break;
-            
             case "-":
-                this.addOperation("-");
-                break;
-
             case "+":
-                this.addOperation("+");
-                break;
-
             case "%":
-                this.addOperation("%");
+                this.addOperation(valueButton);
                 break;
 
             case ",":
@@ -550,6 +545,7 @@ class Calculator{
                 break;
 
             case "Enter":
+            case "=":
                 this.equalClicked();
                 break;
             
@@ -564,9 +560,12 @@ class Calculator{
             case "Backspace":
                 this.removeLastNumber();
                 break;
-            
-            default:
-                alert("valor nao encontrado");
+
+            case "c":
+                if(copy){
+                    this.copyToClipboard();
+                }
+                break;
         }
     }
 
@@ -575,7 +574,6 @@ class Calculator{
     setDateTime(){
 
         this.date = this.newDate.toLocaleDateString(this.locale,{day:"2-digit",month:"long",year:"numeric"});
-
         this.time = this.newDate.toLocaleTimeString(this.locale);
 
     }
